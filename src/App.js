@@ -7,14 +7,13 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(null);
-  const [timeoutId, setTimeoutId] = useState(null);
 
   async function fetchMovies() {
     setErr(null);
     setLoading(true);
 
     try {
-      const response = await fetch("https://swapi.dev/api/film");
+      const response = await fetch("https://swapi.dev/api/films");
 
       if (!response.ok) {
         throw new Error("something went wrong!!");
@@ -32,20 +31,10 @@ function App() {
 
       setMovies(moviesList);
     } catch (error) {
-      setErr(error.message);
-
-      // as setTimeout is inside fetchMovies each time it gets called, new setTimeout is called again, fucntions like setInterval
-      
-      const id = setTimeout(fetchMovies, 5000);
-      setTimeoutId(id);
+      setErr(error.message);      
     }
 
     setLoading(false);
-  }
-
-  function handleCancelRetry(){
-    clearTimeout(timeoutId)
-    setTimeoutId(null)
   }
 
   let content = <p>No movies found</p>;
@@ -55,10 +44,7 @@ function App() {
   }
   if (err) {
     content = (
-      <>
-        <p>{err}</p>
-        {timeoutId && <><p>Retrying..</p><button onClick={handleCancelRetry}>Cancel retry</button></>}
-      </>
+        <p>{err}</p> 
     );
   }
 
