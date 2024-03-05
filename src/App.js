@@ -8,6 +8,10 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(null);
 
+  const [newTitle, setNewTitle] = useState('')
+  const [newDate, setNewDate] = useState('')
+  const [newText, setNewText] = useState('')
+
   const fetchMovies = useCallback(async function() {
     setErr(null);
     setLoading(true);
@@ -56,8 +60,30 @@ function App() {
     content = <p>Loading..</p>;
   }
 
+  function addMovieHandler(){
+    let obj = {
+      title: newTitle,
+      openingText : newText,
+      releaseDate : newDate
+    }
+
+    console.log(obj)
+    setNewDate('')
+    setNewText('')
+    setNewTitle('')
+  }
+
   return (
     <React.Fragment>
+    <section>
+      <label htmlFor="title">Title</label>
+      <input id="title" type="text" value={newTitle} onChange={(e)=>setNewTitle(e.target.value)}></input>
+      <label htmlFor="op-text">Opening text</label>
+      <textarea id="op-text" value={newText} onChange={(e)=>setNewText(e.target.value)}></textarea>
+      <label htmlFor="r-date">Release date</label>
+      <input type="date" value={newDate} onChange={(e)=>setNewDate(e.target.value)}></input>
+      <button onClick={addMovieHandler}>Add movie</button>
+    </section>
       <section>
         <button onClick={fetchMovies}>Fetch Movies</button>
       </section>

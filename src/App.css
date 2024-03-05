@@ -27,3 +27,17 @@ button:active {
   background-color: #460897;
   border-color: #460897;
 }
+
+label{
+  display: block;
+  text-align: left;
+}
+input{
+  display: block;
+  width: 100%;
+  height: 2rem;
+}
+textarea{
+  width: 100%;
+  height: 10rem;
+}
