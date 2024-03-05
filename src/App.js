@@ -8,42 +8,40 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(null);
 
-  const [newTitle, setNewTitle] = useState('')
-  const [newDate, setNewDate] = useState('')
-  const [newText, setNewText] = useState('')
+  const [newTitle, setNewTitle] = useState("");
+  const [newDate, setNewDate] = useState("");
+  const [newText, setNewText] = useState("");
 
-  const fetchMovies = useCallback(async function() {
+  const fetchMovies = useCallback(async function () {
     setErr(null);
     setLoading(true);
 
     try {
-      const response = await fetch("https://swapi.dev/api/films");
+      const response = await fetch(
+        "https://api-react-udemy-default-rtdb.firebaseio.com/movies.json"
+      );
 
       if (!response.ok) {
         throw new Error("something went wrong!!");
       }
 
       const data = await response.json();
-      const moviesList = data.results.map((item) => {
-        return {
-          id: item.episode_id,
-          title: item.title,
-          releaseDate: item.release_date,
-          openingText: item.opening_crawl,
-        };
-      });
+      let moviesList = []
+      for(let key in data){
+        moviesList.push(data[key])
+      }
 
       setMovies(moviesList);
     } catch (error) {
-      setErr(error.message);      
+      setErr(error.message);
     }
 
     setLoading(false);
-  }, [])
+  }, []);
 
-  useEffect(()=>{
-    fetchMovies()
-  }, [fetchMovies])
+  useEffect(() => {
+    fetchMovies();
+  }, [fetchMovies]);
 
   let content = <p>No movies found</p>;
 
@@ -51,39 +49,58 @@ function App() {
     content = <MoviesList movies={movies} />;
   }
   if (err) {
-    content = (
-        <p>{err}</p> 
-    );
+    content = <p>{err}</p>;
   }
 
   if (loading) {
     content = <p>Loading..</p>;
   }
 
-  function addMovieHandler(){
+  async function addMovieHandler() {
     let obj = {
       title: newTitle,
-      openingText : newText,
-      releaseDate : newDate
-    }
+      openingText: newText,
+      releaseDate: newDate,
+    };
 
-    console.log(obj)
-    setNewDate('')
-    setNewText('')
-    setNewTitle('')
+    const response = await fetch(
+      'https://api-react-udemy-default-rtdb.firebaseio.com/movies.json',{
+        method: 'POST',
+        body : JSON.stringify(obj),
+        headers : {
+          'Content-Type' : 'application/json'
+        }
+      }
+    );
+
+    const data = await response.json()
+    console.log(data)
   }
 
   return (
     <React.Fragment>
-    <section>
-      <label htmlFor="title">Title</label>
-      <input id="title" type="text" value={newTitle} onChange={(e)=>setNewTitle(e.target.value)}></input>
-      <label htmlFor="op-text">Opening text</label>
-      <textarea id="op-text" value={newText} onChange={(e)=>setNewText(e.target.value)}></textarea>
-      <label htmlFor="r-date">Release date</label>
-      <input type="date" value={newDate} onChange={(e)=>setNewDate(e.target.value)}></input>
-      <button onClick={addMovieHandler}>Add movie</button>
-    </section>
+      <section>
+        <label htmlFor="title">Title</label>
+        <input
+          id="title"
+          type="text"
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+        ></input>
+        <label htmlFor="op-text">Opening text</label>
+        <textarea
+          id="op-text"
+          value={newText}
+          onChange={(e) => setNewText(e.target.value)}
+        ></textarea>
+        <label htmlFor="r-date">Release date</label>
+        <input
+          type="date"
+          value={newDate}
+          onChange={(e) => setNewDate(e.target.value)}
+        ></input>
+        <button onClick={addMovieHandler}>Add movie</button>
+      </section>
       <section>
         <button onClick={fetchMovies}>Fetch Movies</button>
       </section>
