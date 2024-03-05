@@ -4,7 +4,7 @@ import MoviesList from "./components/MoviesList";
 import "./App.css";
 
 function App() {
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState({});
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(null);
 
@@ -25,13 +25,9 @@ function App() {
         throw new Error("something went wrong!!");
       }
 
-      const data = await response.json();
-      let moviesList = []
-      for(let key in data){
-        moviesList.push(data[key])
-      }
-
-      setMovies(moviesList);
+      const moviesObj = await response.json();
+      setMovies(moviesObj);
+      
     } catch (error) {
       setErr(error.message);
     }
@@ -45,9 +41,10 @@ function App() {
 
   let content = <p>No movies found</p>;
 
-  if (movies.length > 0) {
+  if (movies) {
     content = <MoviesList movies={movies} />;
   }
+
   if (err) {
     content = <p>{err}</p>;
   }
@@ -63,18 +60,20 @@ function App() {
       releaseDate: newDate,
     };
 
-    const response = await fetch(
-      'https://api-react-udemy-default-rtdb.firebaseio.com/movies.json',{
-        method: 'POST',
-        body : JSON.stringify(obj),
-        headers : {
-          'Content-Type' : 'application/json'
-        }
+    await fetch(
+      "https://api-react-udemy-default-rtdb.firebaseio.com/movies.json",
+      {
+        method: "POST",
+        body: JSON.stringify(obj),
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
 
-    const data = await response.json()
-    console.log(data)
+    setNewDate('')
+    setNewText('')
+    setNewTitle('')
   }
 
   return (
