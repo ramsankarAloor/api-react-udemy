@@ -27,7 +27,7 @@ function App() {
 
       const moviesObj = await response.json();
       setMovies(moviesObj);
-      
+
     } catch (error) {
       setErr(error.message);
     }
@@ -42,7 +42,7 @@ function App() {
   let content = <p>No movies found</p>;
 
   if (movies) {
-    content = <MoviesList movies={movies} />;
+    content = <MoviesList movies={movies} fetchMovies={fetchMovies}/>;
   }
 
   if (err) {

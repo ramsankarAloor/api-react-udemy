@@ -14,9 +14,11 @@ const MovieList = (props) => {
       {moviesArray.map((movie, index) => (
         <Movie
           key={movie.id}
+          id={movie.id}
           title={movie.title}
           releaseDate={movie.releaseDate}
           openingText={movie.openingText}
+          fetchMovies = {props.fetchMovies}
         />
       ))}
     </ul>

@@ -18,3 +18,7 @@
   margin: 0;
   font-size: 1rem;
 }
+
+.delete-button{
+  background-color: red;
+}
